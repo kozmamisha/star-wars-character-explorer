@@ -1,24 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  movie: '',
+  movies: [],
   name: '',
   gender: '',
-  minMass: 0,
-  maxMass: 150,
-}
+  massRange: [0, 150],
+};
 
 const filtersSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
-    setFilter: (state, action) => {
-      const { key, value } = action.payload;
-      return { ...state, [key]: value };
+    setMoviesFilter: (state, action) => {
+      state.movies = action.payload;
     },
-    clearFilters: () => initialState,
+    setNameFilter: (state, action) => {
+      state.name = action.payload;
+    },
+    setGenderFilter: (state, action) => {
+      state.gender = action.payload;
+    },
+    setMassRangeFilter: (state, action) => {
+      state.massRange = action.payload;
+    },
+    resetFilters: () => {
+      return initialState;
+    },
   },
 });
 
-export const { setFilter, clearFilters } = filtersSlice.actions;
-export const filtersReducer = filtersSlice.reducer;
+export const { setMoviesFilter, setNameFilter, setGenderFilter, setMassRangeFilter, resetFilters } = filtersSlice.actions;
+export const filtersReducer =  filtersSlice.reducer;

@@ -1,9 +1,10 @@
 import { Button, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import { fetchMovies, fetchSpecies, fetchStarships } from '../redux/slices/characters';
 
 const CharacterDetailsPage = () => {
