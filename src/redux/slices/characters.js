@@ -1,39 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const fetchData = async (urls) => {
+  return await Promise.all(
+    urls.map(async (url) => {
+      const response = await axios.get(url);
+      return response.data.title || response.data.name;
+    })
+  );
+};
+
 export const fetchCharacters = createAsyncThunk('characters/fetchCharacters', async () => {
   const { data } = await axios.get('https://swapi.dev/api/people/');
   return data;
 });
 
 export const fetchMovies = createAsyncThunk('characters/fetchMovies', async (filmUrls) => {
-  const moviesTitles = await Promise.all(
-    filmUrls.map(async (movieUrl) => {
-      const movieRes = await axios.get(movieUrl);
-      return movieRes.data.title;
-    }),
-  );
-  return moviesTitles;
+  return await fetchData(filmUrls);
 });
 
 export const fetchSpecies = createAsyncThunk('characters/fetchSpecies', async (speciesUrls) => {
-  const speciesTitles = await Promise.all(
-    speciesUrls.map(async (specieUrl) => {
-      const speciesRes = await axios.get(specieUrl);
-      return speciesRes.data.name;
-    }),
-  );
-  return speciesTitles;
+  return await fetchData(speciesUrls);
 });
 
 export const fetchStarships = createAsyncThunk('characters/fetchStarships', async (starshipsUrls) => {
-  const starshipsTitles = await Promise.all(
-    starshipsUrls.map(async (starshipUrl) => {
-      const starshipsRes = await axios.get(starshipUrl);
-      return starshipsRes.data.name;
-    }),
-  );
-  return starshipsTitles;
+  return await fetchData(starshipsUrls);
 });
 
 const initialState = {

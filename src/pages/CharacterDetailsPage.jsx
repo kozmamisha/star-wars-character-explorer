@@ -1,6 +1,6 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Skeleton, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -9,6 +9,7 @@ import { fetchMovies, fetchSpecies, fetchStarships } from '../redux/slices/chara
 
 const CharacterDetailsPage = () => {
   const [character, setCharacter] = useState();
+  const [isError, setIsError] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -30,15 +31,49 @@ const CharacterDetailsPage = () => {
         dispatch(fetchSpecies(res.data.species));
         dispatch(fetchStarships(res.data.starships));
       } catch (error) {
-        console.error('Error fetching character details!');
+        setIsError(true);
+        console.error(error);
+        alert('Error fetching character details!');
       }
     };
 
     fetchCharacterDetails();
   }, [dispatch, id]);
 
+  if (isError) {
+    return <Navigate to="/" />;
+  }
+
   if (!character) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography
+              variant="h4"
+              align="center"
+              marginTop="15px"
+              marginBottom="15px"
+              fontWeight={700}>
+              <Skeleton variant="h3" />
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <Skeleton variant="body1" width={210} />
+              <Skeleton variant="body1" width={210} />
+              <Skeleton variant="body1" width={210} />
+              <Skeleton variant="body1" width={210} />
+              <Skeleton variant="body1" width={210} />
+              <Skeleton variant="body1" width={210} />
+            </div>
+          </Grid>
+          <Grid item xs={12} marginTop="15px">
+            <Skeleton variant="rectangular" width={210} height={40} />
+          </Grid>
+        </Grid>
+      </>
+    );
   }
 
   return (
@@ -82,7 +117,7 @@ const CharacterDetailsPage = () => {
               : 'There are no species'}
           </Typography>
           <Typography variant="h5">
-            <b>Starships:</b>{' '}
+            <b>Starships:</b>
             {isStarshipsLoading
               ? 'Loading...'
               : starships.items.length > 0
